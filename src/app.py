@@ -129,6 +129,17 @@ def main():
             st.text(result.stdout)
             if result.stderr:
                 st.error(result.stderr)
+            
+            # Offer the generated report.html as a downloadable file
+            if os.path.exists("report.html"):
+                with open("report.html", "rb") as f:
+                    st.download_button(
+                        label="Download HTML Report",
+                        data=f,
+                        file_name="test_report.html",
+                        mime="text/html"
+                    )
+
 
 if __name__ == "__main__":
     main()
