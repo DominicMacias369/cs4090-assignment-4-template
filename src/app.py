@@ -3,7 +3,7 @@ import pandas as pd
 import subprocess
 import os
 from datetime import datetime
-from tasks import load_tasks, save_tasks, filter_tasks_by_priority, filter_tasks_by_category
+from tasks import load_tasks, save_tasks, filter_tasks_by_priority, filter_tasks_by_category, generate_unique_id, get_overdue_tasks, search_tasks, summarize_by_category
 
 def main():
     st.title("To-Do Application")
@@ -26,7 +26,7 @@ def main():
         if submit_button:
             if task_title:
                 new_task = {
-                    "id": len(tasks) + 1,
+                    "id": generate_unique_id(tasks),
                     "title": task_title,
                     "description": task_description,
                     "priority": task_priority,
@@ -43,6 +43,9 @@ def main():
 
     # Main area to display tasks
     st.header("Your Tasks")
+    category_summary = summarize_by_category(tasks)
+    st.subheader("Task Count, Sorted by Category")
+    st.write(", ".join(f"{cat}: {count}" for cat, count in category_summary.items()))
 
     # Filter options
     col1, col2 = st.columns(2)
@@ -52,6 +55,10 @@ def main():
         filter_priority = st.selectbox("Filter by Priority", ["All", "High", "Medium", "Low"])
 
     show_completed = st.checkbox("Show Completed Tasks")
+    show_overdue = st.checkbox("Show Only Overdue Tasks")
+    search_query = st.text_input("Search Tasks")
+
+
 
     # Apply filters
     filtered_tasks = tasks.copy()
@@ -59,7 +66,11 @@ def main():
         filtered_tasks = filter_tasks_by_category(filtered_tasks, filter_category)
     if filter_priority != "All":
         filtered_tasks = filter_tasks_by_priority(filtered_tasks, filter_priority)
-    if not show_completed:
+    if show_overdue:
+        filtered_tasks = get_overdue_tasks(filtered_tasks)
+    if search_query:
+        filtered_tasks = search_tasks(filtered_tasks, search_query)
+    elif not show_completed:
         filtered_tasks = [task for task in filtered_tasks if not task["completed"]]
 
     # Display tasks

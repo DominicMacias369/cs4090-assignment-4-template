@@ -48,7 +48,8 @@ def generate_unique_id(tasks):
     """
     if not tasks:
         return 1
-    return max(task["id"] for task in tasks) + 1
+    else:
+        return max(task['id'] for task in tasks) + 1
 
 def filter_tasks_by_priority(tasks, priority):
     """
@@ -123,3 +124,19 @@ def get_overdue_tasks(tasks):
         if not task.get("completed", False) and 
            task.get("due_date", "") < today
     ]
+
+def summarize_by_category(tasks):
+    """
+    Count how many tasks exist in each category.
+    
+    Args:
+        tasks (list): List of task dictionaries
+    
+    Returns:
+        dict: A dictionary like {"Work": 2, "School": 1}
+    """
+    summary = {}
+    for task in tasks:
+        cat = task.get("category", "Uncategorized")
+        summary[cat] = summary.get(cat, 0) + 1
+    return summary

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "title": "Past Task",
+    "due_date": "2025-04-27",
+    "completed": false,
+    "priority": "Low",
+    "category": "Work",
+    "created_at": "2025-04-30"
+  },
+  {
+    "id": 2,
+    "title": "Future Task",
+    "due_date": "2025-05-03",
+    "completed": false,
+    "priority": "Low",
+    "category": "Work",
+    "created_at": "2025-04-30"
+  }
+]
